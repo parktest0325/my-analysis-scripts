@@ -1,13 +1,12 @@
-from ghidra.program.model.address import Address
-from ghidra.util import Msg
+from ghidra.program.model.address import AddressFactory
+from ghidra.program.model.address import AddressSpace
 
 def replace_baseaddr():
-    NEW_BASE_ADDR = "0x0000000"
     program = getCurrentProgram()
-    address_factory = program.getAddressFactory()
-    new_base = address_factory.getAddress(NEW_BASE_ADDR)
-    tx = program.startTransaction("Change Image Base")
-    program.setImageBase(new_base, True)
-    program.endTransaction(tx, True)
+    new_base = 0x400000
+    af = program.getAddressFactory()
+    space = af.getDefaultAddressSpace()
+    new_base_addr = space.getAddress(new_base)
+    program.setImageBase(new_base_addr, True)
 
 replace_baseaddr()
