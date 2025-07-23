@@ -73,8 +73,17 @@ Interceptor.attach(Module.findExportByName("libc.so", 'open'), {
             const backtrace = Thread.backtrace(this.context, Backtracer.ACCURATE)
                 .map(DebugSymbol.fromAddress)
                 .join('\n\t');
-            console.log(ansi + "[*] Native Call Stack:\n\t" + this.backtrace + reset);
+            console.log(ansi + "[*] Native Call Stack:\n\t" + this.backtrace);
             fdMaps.set(fd, value);
+
+            Java.perform(() => {
+                const stack = Java.use('java.lang.Exception').$new().getStackTrace();
+                console.log("JavaException...")
+                for (let i = 0; i < stack.length; i++) {
+                    console.log('\t' + stack[i].toString());
+                }
+            });
+            console.log(reset)
         }
     }
 });
